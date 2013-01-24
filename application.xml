@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<application xmlns="http://ns.adobe.com/air/application/3.4">
+	<id>swf2png</id>
+	<filename>swf2png</filename>
+	<name>swf2png</name>
+	<versionNumber>0.1.0</versionNumber>
+	<description>Convert SWF files to PNG sequences.</description>
+
+	<initialWindow>
+		<content>bin/swf2png.swf</content>
+		<systemChrome>standard</systemChrome>
+		<transparent>false</transparent>
+		<autoOrients>false</autoOrients>
+		<fullScreen>false</fullScreen>
+		<visible>true</visible>
+	</initialWindow>
+
+	<icon>
+		<image48x48>icons/icon_48.png</image48x48>
+		<image128x128>icons/icon_128.png</image128x128>
+		<image512x512>icons/icon_512.png</image512x512>
+	</icon>
+
+	<fileTypes>
+		<fileType>
+			<name>SWF</name>
+			<extension>swf</extension>
+			<contentType>application/swf</contentType>
+		</fileType>
+	</fileTypes>
+
+</application>
