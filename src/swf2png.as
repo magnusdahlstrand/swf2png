@@ -64,6 +64,7 @@ package
 			outputHeight = Math.ceil(ev.target.height);
 			outfield.appendText("\nLoaded!");
 			totalFrames = loadedSwf.totalFrames;
+			outfield.appendText("\nFrame count: " + totalFrames);
 
 			calculateBBox();
 
@@ -120,11 +121,14 @@ package
 
 		//Called for every frame
 		private function step(ev:TimerEvent):void {
-			goToFrame(loadedSwf, counter);
-			saveFrame();
 			counter++;
-			if(counter > totalFrames) {
+			if(counter <= totalFrames) {
+				goToFrame(loadedSwf, counter);
+				saveFrame();
+			}
+			else {
 				timer.stop();
+				outfield.appendText("\nDone!");
 				exit(0);
 				return;
 			}
