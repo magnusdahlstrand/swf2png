@@ -32,6 +32,7 @@ package
 		private var inputFileName:String;
 		private var inputFilePath:String;
 		private var prefix:String;
+		private var separator:String = "_";
 		private var outfield:TextField;
 		private var outputDirPath:String;
 		private var offsetMatrix:Matrix;
@@ -139,8 +140,9 @@ package
 			var bitmapData:BitmapData = new BitmapData(outputWidth, outputHeight, true, 0x0);
 			bitmapData.draw(loader.content, offsetMatrix);
 			var bytearr:ByteArray = PNGEncoder.encode(bitmapData);
-			var outfileName:String = outputDirPath + File.separator + prefix + counter + ".png"
+			var outfileName:String = outputDirPath + File.separator + prefix + separator + counter + ".png"
 			var file:File = new File(outfileName);
+
 			outfield.appendText("\nPrefix: " + prefix);
 			outfield.appendText("\nWriting: " + outfileName);
 			var stream:FileStream = new FileStream();
