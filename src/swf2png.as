@@ -12,6 +12,8 @@ package
 	import flash.events.TimerEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileStream;
+	import flash.geom.Rectangle;
+	import flash.geom.Matrix;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -32,6 +34,9 @@ package
 		private var prefix:String;
 		private var outfield:TextField;
 		private var outputDirPath:String;
+		private var offsetMatrix:Matrix;
+		private var bBox:Rectangle;
+
 
 
 		public function swf2png() {
@@ -58,14 +63,59 @@ package
 			outputWidth = Math.ceil(ev.target.width);
 			outputHeight = Math.ceil(ev.target.height);
 			outfield.appendText("\nLoaded!");
+			totalFrames = loadedSwf.totalFrames;
+
+			calculateBBox();
+
 			stopClip(loadedSwf);
 			goToFrame(loadedSwf, 0);
-			totalFrames = loadedSwf.totalFrames;
 			timer = new Timer(1);
 
 			timer.addEventListener(TimerEvent.TIMER, step);
 			timer.start();
 
+		}
+
+		private function calculateBBox():void {
+			stopClip(loadedSwf);
+			goToFrame(loadedSwf, 0);
+
+			var boundsArray:Object = {
+				"x" : new Array(),
+				"y" : new Array(),
+				"w" : new Array(),
+				"h" : new Array()
+			}
+			var r:Rectangle;
+			for(var currentFrame:int = 0; currentFrame < totalFrames; currentFrame++) {
+				goToFrame(loadedSwf, currentFrame);
+				r = loader.content.getRect(stage);
+				boundsArray.x.push(r.x);
+				boundsArray.y.push(r.y);
+				boundsArray.w.push(r.width);
+				boundsArray.h.push(r.height);
+			}
+
+			boundsArray.x.sort(Array.NUMERIC);
+			boundsArray.y.sort(Array.NUMERIC);
+			boundsArray.w.sort(Array.NUMERIC | Array.DESCENDING);
+			boundsArray.h.sort(Array.NUMERIC | Array.DESCENDING);
+
+			bBox = new Rectangle(
+				Math.floor(boundsArray.x[0]),
+				Math.floor(boundsArray.y[0]),
+				Math.ceil(boundsArray.w[0]),
+				Math.ceil(boundsArray.h[0])
+			);
+
+			outfield.appendText("\nBounding box: " + bBox)
+
+			outputWidth = bBox.width;
+			outputHeight = bBox.height;
+			offsetMatrix = new Matrix();
+			offsetMatrix.translate(bBox.x * -1, bBox.y * -1);
+
+			return;
 		}
 
 		//Called for every frame
@@ -83,7 +133,7 @@ package
 		//Saves the current frame of the loader object to a png
 		private function saveFrame():void {
 			var bitmapData:BitmapData = new BitmapData(outputWidth, outputHeight, true, 0x0);
-			bitmapData.draw(loader);
+			bitmapData.draw(loader.content, offsetMatrix);
 			var bytearr:ByteArray = PNGEncoder.encode(bitmapData);
 			var outfileName:String = outputDirPath + File.separator + prefix + counter + ".png"
 			var file:File = new File(outfileName);
