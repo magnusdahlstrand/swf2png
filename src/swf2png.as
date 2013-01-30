@@ -52,7 +52,7 @@ package
 		private function loadSwf():void {
 
 			loader = new Loader();
-			outfield.appendText("\nLoading " + inputFilePath);
+			log("Loading " + inputFilePath);
 			loader.load(new URLRequest("file://" + inputFilePath));
 			loader.contentLoaderInfo.addEventListener(Event.INIT, startLoop);
 
@@ -63,9 +63,9 @@ package
 			loadedSwf = MovieClip(ev.target.content);
 			outputWidth = Math.ceil(ev.target.width);
 			outputHeight = Math.ceil(ev.target.height);
-			outfield.appendText("\nLoaded!");
+			log("Loaded!");
 			totalFrames = loadedSwf.totalFrames;
-			outfield.appendText("\nFrame count: " + totalFrames);
+			log("Frame count: " + totalFrames);
 
 			calculateBBox();
 
@@ -110,7 +110,7 @@ package
 				Math.ceil(boundsArray.h[0])
 			);
 
-			outfield.appendText("\nBounding box: " + bBox)
+			log("Bounding box: " + bBox)
 
 			outputWidth = bBox.width;
 			outputHeight = bBox.height;
@@ -129,7 +129,7 @@ package
 			}
 			else {
 				timer.stop();
-				outfield.appendText("\nDone!");
+				log("Done!");
 				exit(0);
 				return;
 			}
@@ -143,8 +143,7 @@ package
 			var outfileName:String = outputDirPath + File.separator + prefix + separator + counter + ".png"
 			var file:File = new File(outfileName);
 
-			outfield.appendText("\nPrefix: " + prefix);
-			outfield.appendText("\nWriting: " + outfileName);
+			log("Writing: " + outfileName);
 			var stream:FileStream = new FileStream();
 			stream.open(file, "write");
 			stream.writeBytes(bytearr);
@@ -194,10 +193,11 @@ package
 					return "";
 				}
 				prefix = matches[1];
+				log("Prefix: " + prefix);
 				var f:File = new File(ev.currentDirectory.nativePath);
 				f = f.resolvePath(inputFileName);
 				if(!f.exists) {
-					outfield.appendText("\nInput file not found!");
+					log("Input file not found!");
 					//Input file not found
 					exit(3);
 					return "";
@@ -223,7 +223,7 @@ package
 					exit(4);
 					return "";
 				}
-				outfield.appendText("\ninpt: " + d.nativePath);
+				log("inpt: " + d.nativePath);
 				return d.nativePath;
 			}
 			else {
@@ -238,20 +238,25 @@ package
 					}
 				}
 				else {
-					outfield.appendText("\ncwd: " + ev.currentDirectory.nativePath);
+					log("cwd: " + ev.currentDirectory.nativePath);
 					return ev.currentDirectory.nativePath;
 				}
 				return "";
 			}
 		}
+
+		private function log(message:String="", add_new_line:Boolean=true):void {
+			outfield.appendText((add_new_line ? "\n" : "") + message);
+		}
+
 		//Invoke handler called when started
 		private function onInvoke(ev:InvokeEvent):void {
 
 			inputFilePath = getInputFile(ev);
 			outputDirPath = getOutputDir(ev);
 
-			outfield.appendText("\nInput file: " + inputFilePath);
-			outfield.appendText("\nOutput directory: " + outputDirPath);
+			log("Input file: " + inputFilePath);
+			log("Output directory: " + outputDirPath);
 			loadSwf();
 		}
 
