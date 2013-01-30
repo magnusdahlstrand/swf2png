@@ -3,7 +3,7 @@
 	<id>swf2png</id>
 	<filename>swf2png</filename>
 	<name>swf2png</name>
-	<versionNumber>0.1.0</versionNumber>
+	<versionNumber>0.2.0</versionNumber>
 	<description>Convert SWF files to PNG sequences.</description>
 
 	<initialWindow>
