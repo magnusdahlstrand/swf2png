@@ -55,6 +55,10 @@ Example B, write to home directory:
 Example C, write to parent directory:
 `swf2png animation.swf ../`
 
+There is also a simple bash script in `/bin` called **swfs2pngs** (notice the pluralisation) that takes a file glob (such as `*.swf`) and processes all matching files. It does not support sending in an output directory, but the directory will be selected the same as for only sending in one parameter to swf2png.
+
+The install script doesn't copy the `swfs2pngs` script to `~/bin`, so if you're interested in using it you have to do that yourself.
+
 ## Compatibility/Testing
 
 The tool is written to work with AS3 SWFs (AVM2 SWFs) containing looped, nested movie clips. It's tested with a few different SWFs on Mac OSX 10.8.2, but might work on other platforms with other SWFs as well. There is no support for Actionscript 2 (AVM1) SWFs.
