@@ -140,7 +140,11 @@ package
 			var bitmapData:BitmapData = new BitmapData(outputWidth, outputHeight, true, 0x0);
 			bitmapData.draw(loader.content, offsetMatrix);
 			var bytearr:ByteArray = PNGEncoder.encode(bitmapData);
-			var outfileName:String = outputDirPath + File.separator + prefix + separator + counter + ".png"
+			var increment:String = '';
+			if(totalFrames > 1) {
+				increment = separator + counter;
+			}
+			var outfileName:String = outputDirPath + File.separator + prefix + increment + ".png"
 			var file:File = new File(outfileName);
 
 			log("Writing: " + outfileName);
