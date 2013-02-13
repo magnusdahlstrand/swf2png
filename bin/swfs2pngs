@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+current=0
+total=$#
+for f in "$@"
+do
+	current=$(( $current + 1 ))
+	echo -en "Processing $current of $total\r"
+	swf2png "$f"
+done
