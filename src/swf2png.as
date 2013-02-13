@@ -78,6 +78,15 @@ package
 
 		}
 
+		private function padNumber(input:int, target:int):String {
+			var out:String = input.toString();
+			var targetCount:int = target.toString().length;
+			while(out.length < targetCount) {
+				out = '0' + out;
+			}
+			return out;
+		}
+
 		private function calculateBBox():void {
 			stopClip(loadedSwf);
 			goToFrame(loadedSwf, 0);
@@ -142,7 +151,7 @@ package
 			var bytearr:ByteArray = PNGEncoder.encode(bitmapData);
 			var increment:String = '';
 			if(totalFrames > 1) {
-				increment = separator + counter;
+				increment = separator + padNumber(counter, totalFrames);
 			}
 			var outfileName:String = outputDirPath + File.separator + prefix + increment + ".png"
 			var file:File = new File(outfileName);
