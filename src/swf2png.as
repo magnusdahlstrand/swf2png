@@ -199,7 +199,9 @@ package
 		private function getInputFile(ev:InvokeEvent):String {
 			if(ev.arguments && ev.arguments.length) {
 				inputFileName = ev.arguments[0];
-				var matches:Array = inputFileName.match(/([a-zA-Z0-9_\-\+\.]*?)\.swf$/);
+				var matchNameRegExStr:String = '([^\\' + File.separator + ']+)\\.swf$';
+				var matchNameRegEx:RegExp = new RegExp(matchNameRegExStr);
+				var matches:Array = inputFileName.match(matchNameRegEx);
 				if(!matches) {
 					// File inputFileName not valid
 					exit(2);
