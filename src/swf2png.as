@@ -199,7 +199,7 @@ package
 		private function getInputFile(ev:InvokeEvent):String {
 			if(ev.arguments && ev.arguments.length) {
 				inputFileName = ev.arguments[0];
-				var matchNameRegExStr:String = '([^\\' + File.separator + ']+)\\.swf$';
+				var matchNameRegExStr:String = '([^\\' + File.separator + ']+)$';
 				var matchNameRegEx:RegExp = new RegExp(matchNameRegExStr);
 				var matches:Array = inputFileName.match(matchNameRegEx);
 				if(!matches) {
@@ -207,7 +207,7 @@ package
 					exit(2);
 					return "";
 				}
-				prefix = matches[1];
+				prefix = matches[1].split('.')[0];
 				log("Prefix: " + prefix);
 				var f:File = new File(ev.currentDirectory.nativePath);
 				f = f.resolvePath(inputFileName);
