@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 
+
 current=0
 total=$#
 for f in "$@"
 do
 	current=$(( $current + 1 ))
+	outpath="$(dirname "./$f")/"
 	echo -en "Processing $current of $total\r"
-	swf2png "$f"
+	swf2png "$f" "$outpath"
+	error=$?
+	echo -n "($current/$total) "
+	if [[ $error != 0 ]]; then
+		echo "Error $error: $f"
+	else
+		echo "Processed: $f"
+	fi
 done
