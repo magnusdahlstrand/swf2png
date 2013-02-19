@@ -60,7 +60,14 @@ package
 
 		//Event handler called when the swf is loaded. Sets it up and starts the export loop
 		private function startLoop(ev:Event):void {
-			loadedSwf = MovieClip(ev.target.content);
+			try {
+				loadedSwf = MovieClip(ev.target.content);
+			}
+			catch(err:Error) {
+				//AVM1 Movie not supported
+				exit(5);
+				return;
+			}
 			outputWidth = Math.ceil(ev.target.width);
 			outputHeight = Math.ceil(ev.target.height);
 			log("Loaded!");
@@ -276,6 +283,7 @@ package
 		}
 
 		private function exit(code:int=0):void {
+			log("Exit: " + code);
 			NativeApplication.nativeApplication.exit(code);
 		}
 	}
