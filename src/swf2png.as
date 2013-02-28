@@ -1,6 +1,7 @@
 package
 {
 	import com.adobe.images.PNGEncoder;
+	import com.bit101.components.ScrollPane;
 	
 	import flash.desktop.NativeApplication;
 	import flash.display.BitmapData;
@@ -38,6 +39,7 @@ package
 		private var offsetMatrix:Matrix;
 		private var bBox:Rectangle;
 		private var scaleFactor:Number;
+		private var pane:ScrollPane;
 
 
 
@@ -47,8 +49,15 @@ package
 			stage.scaleMode = 'noScale';
 			outfield = new TextField();
 			outfield.autoSize = TextFieldAutoSize.LEFT;
-			stage.addChild(outfield);
-			stage.frameRate = 12;
+			pane = new ScrollPane(stage);
+
+			pane.width = stage.stageWidth;
+			pane.height = stage.stageHeight;
+			pane.addChild(outfield);
+			pane.update();
+
+			stage.addEventListener(Event.RESIZE, onResize, false, 0, true);
+
 		}
 
 		//Loads in file
@@ -278,6 +287,7 @@ package
 
 		private function log(message:String="", add_new_line:Boolean=true):void {
 			outfield.appendText((add_new_line ? "\n" : "") + message);
+			pane.update();
 		}
 
 		//Invoke handler called when started
@@ -290,6 +300,12 @@ package
 			log("Input file: " + inputFilePath);
 			log("Output directory: " + outputDirPath);
 			loadSwf();
+		}
+
+		private function onResize(ev:Event):void {
+			pane.width = stage.stageWidth;
+			pane.height = stage.stageHeight;
+			pane.update();
 		}
 
 		private function exit(code:int=0):void {
