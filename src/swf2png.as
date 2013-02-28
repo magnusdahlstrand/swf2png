@@ -36,7 +36,7 @@ package
 		private var separator:String = "_";
 		private var outfield:TextField;
 		private var outputDirPath:String;
-		private var offsetMatrix:Matrix;
+		private var offsetMatrix:Matrix = new Matrix();
 		private var bBox:Rectangle;
 		private var scaleFactor:Number;
 		private var pane:ScrollPane;
@@ -45,8 +45,10 @@ package
 
 		public function swf2png() {
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvoke);
+
 			stage.align = 'TL';
 			stage.scaleMode = 'noScale';
+			stage.frameRate = 12;
 			outfield = new TextField();
 			outfield.autoSize = TextFieldAutoSize.LEFT;
 			pane = new ScrollPane(stage);
@@ -86,8 +88,6 @@ package
 			totalFrames = loadedSwf.totalFrames;
 			log("Frame count: " + totalFrames);
 
-			calculateBBox();
-
 			stopClip(loadedSwf);
 			goToFrame(loadedSwf, 0);
 			timer = new Timer(1);
@@ -104,49 +104,6 @@ package
 				out = '0' + out;
 			}
 			return out;
-		}
-
-		private function calculateBBox():void {
-			stopClip(loadedSwf);
-			goToFrame(loadedSwf, 0);
-
-			var boundsArray:Object = {
-				"x" : new Array(),
-				"y" : new Array(),
-				"w" : new Array(),
-				"h" : new Array()
-			}
-			var r:Rectangle;
-			for(var currentFrame:int = 0; currentFrame < totalFrames; currentFrame++) {
-				goToFrame(loadedSwf, currentFrame);
-				r = loader.content.getRect(stage);
-				boundsArray.x.push(r.x);
-				boundsArray.y.push(r.y);
-				boundsArray.w.push(r.width);
-				boundsArray.h.push(r.height);
-			}
-
-			boundsArray.x.sort(Array.NUMERIC);
-			boundsArray.y.sort(Array.NUMERIC);
-			boundsArray.w.sort(Array.NUMERIC | Array.DESCENDING);
-			boundsArray.h.sort(Array.NUMERIC | Array.DESCENDING);
-
-			bBox = new Rectangle(
-				Math.floor(boundsArray.x[0]),
-				Math.floor(boundsArray.y[0]),
-				Math.ceil(boundsArray.w[0]),
-				Math.ceil(boundsArray.h[0])
-			);
-
-			log("Bounding box: " + bBox)
-
-			outputWidth = bBox.width * scaleFactor;
-			outputHeight = bBox.height * scaleFactor;
-			offsetMatrix = new Matrix();
-			offsetMatrix.translate(bBox.x * -1, bBox.y * -1);
-			offsetMatrix.scale(scaleFactor, scaleFactor);
-
-			return;
 		}
 
 		//Called for every frame
@@ -167,6 +124,7 @@ package
 		//Saves the current frame of the loader object to a png
 		private function saveFrame():void {
 			var bitmapData:BitmapData = new BitmapData(outputWidth, outputHeight, true, 0x0);
+			offsetMatrix.scale(scaleFactor, scaleFactor);
 			bitmapData.draw(loader.content, offsetMatrix);
 			var bytearr:ByteArray = PNGEncoder.encode(bitmapData);
 			var increment:String = '';
@@ -282,6 +240,8 @@ package
 				log("scale factor set to " + parseFloat(ev.arguments[2]));
 				return parseFloat(ev.arguments[2]);
 			}
+			outputWidth *= scaleFactor;
+			outputHeight *= scaleFactor;
 			return 1;
 		}
 
