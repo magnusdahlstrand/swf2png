@@ -42,6 +42,8 @@ package
 
 		public function swf2png() {
 			NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE, onInvoke);
+			stage.align = 'TL';
+			stage.scaleMode = 'noScale';
 			outfield = new TextField();
 			outfield.autoSize = TextFieldAutoSize.LEFT;
 			stage.addChild(outfield);
