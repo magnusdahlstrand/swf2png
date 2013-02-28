@@ -164,7 +164,7 @@ package
 			{
 				var mc:MovieClip = inMc.getChildAt(i) as MovieClip;
 				if(mc) {
-					mc.gotoAndStop(frameNo % inMc.totalFrames);
+					mc.gotoAndStop(frameNo % (inMc.totalFrames + 1));
 					if(mc.numChildren > 0) {
 						goToFrame(mc, frameNo);
 					}
