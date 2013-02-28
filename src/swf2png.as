@@ -249,26 +249,24 @@ package
 					exit(4);
 					return "";
 				}
-				log("inpt: " + d.nativePath);
+				return d.nativePath;
+			}
+			else if(inputFilePath) {
+				d = new File(inputFilePath);
+				if(!d.isDirectory) {
+					d = d.resolvePath('..');
+				}
 				return d.nativePath;
 			}
 			else {
 				if(ev.currentDirectory.nativePath === '/') {
-					if(ev.arguments.length) {
-						d = new File(ev.arguments[0]);
-						d = d.resolvePath('..');
-						return d.nativePath;
-					}
-					else {
-						return File.desktopDirectory.nativePath;
-					}
+					return File.desktopDirectory.nativePath;
 				}
 				else {
-					log("cwd: " + ev.currentDirectory.nativePath);
 					return ev.currentDirectory.nativePath;
 				}
-				return "";
 			}
+			return "";
 		}
 		private function getScaleFactor(ev:InvokeEvent):Number {
 			if(ev.arguments.length > 2) {
