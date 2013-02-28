@@ -37,6 +37,7 @@ package
 		private var outputDirPath:String;
 		private var offsetMatrix:Matrix;
 		private var bBox:Rectangle;
+		private var scaleFactor:Number;
 
 
 
@@ -130,10 +131,11 @@ package
 
 			log("Bounding box: " + bBox)
 
-			outputWidth = bBox.width;
-			outputHeight = bBox.height;
+			outputWidth = bBox.width * scaleFactor;
+			outputHeight = bBox.height * scaleFactor;
 			offsetMatrix = new Matrix();
 			offsetMatrix.translate(bBox.x * -1, bBox.y * -1);
+			offsetMatrix.scale(scaleFactor, scaleFactor);
 
 			return;
 		}
@@ -268,6 +270,13 @@ package
 				return "";
 			}
 		}
+		private function getScaleFactor(ev:InvokeEvent):Number {
+			if(ev.arguments.length > 2) {
+				log("scale factor set to " + parseFloat(ev.arguments[2]));
+				return parseFloat(ev.arguments[2]);
+			}
+			return 1;
+		}
 
 		private function log(message:String="", add_new_line:Boolean=true):void {
 			outfield.appendText((add_new_line ? "\n" : "") + message);
@@ -278,6 +287,7 @@ package
 
 			inputFilePath = getInputFile(ev);
 			outputDirPath = getOutputDir(ev);
+			scaleFactor = getScaleFactor(ev);
 
 			log("Input file: " + inputFilePath);
 			log("Output directory: " + outputDirPath);
